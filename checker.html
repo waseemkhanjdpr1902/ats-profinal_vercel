@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ATS Score Checker – ATSPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#07070f;--s1:#0f0f1a;--br:#1e1e35;--ac:#7c6ee6;--gr:#06d6a0;--am:#f59e0b;--rd:#ef4444;--tx:#eeeef5;--mt:#6b6b85}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:'Syne',sans-serif}
+a{color:inherit;text-decoration:none}
+nav{position:sticky;top:0;z-index:99;background:rgba(7,7,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--br)}
+.ni{max-width:1080px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:9px}
+.lb{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#7c6ee6,#06d6a0);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;font-family:'Syne',sans-serif}
+.lt{font-weight:700;font-size:17px;font-family:'Syne',sans-serif}
+.nl{display:flex;gap:3px;align-items:center}
+.nl a{padding:6px 13px;border-radius:8px;font-size:13px;font-weight:500;color:var(--mt);border:1px solid transparent;transition:all .2s}
+.nl a:hover{color:var(--tx)}
+.nl a.on{color:#fff;background:rgba(124,110,230,.2);border-color:rgba(124,110,230,.4)}
+.pb{display:none;margin-left:6px;padding:3px 10px;border-radius:100px;background:rgba(6,214,160,.15);border:1px solid rgba(6,214,160,.3);font-size:11px;color:var(--gr);font-weight:700}
+main{max-width:1060px;margin:0 auto;padding:44px 20px 60px}
+input,textarea{background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 13px;color:var(--tx);font-size:13px;outline:none;width:100%;font-family:'Inter',sans-serif;transition:border-color .2s;resize:vertical}
+input:focus,textarea:focus{border-color:var(--ac)}
+label{display:block;font-size:12px;font-weight:500;color:var(--mt);margin-bottom:5px}
+.card{background:var(--s1);border:1px solid var(--br);border-radius:14px;padding:22px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px}
+.api-box{padding:18px 20px;background:var(--s1);border:1px solid rgba(245,158,11,.3);border-radius:12px;margin-bottom:20px}
+.api-box h3{font-size:14px;color:var(--am);margin-bottom:6px}
+.api-box p{font-size:13px;color:var(--mt);margin-bottom:12px}
+.api-row{display:flex;gap:8px}
+.api-row input{flex:1}
+.save-btn{padding:9px 18px;border-radius:8px;background:var(--ac);color:#fff;border:none;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
+.saved{font-size:13px;color:var(--gr);margin-top:8px;display:none}
+.free-bar{padding:10px 16px;border-radius:10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);font-size:13px;color:var(--am);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.run-btn{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#7c6ee6,#a855f7);color:#fff;font-weight:700;font-size:15px;border:none;cursor:pointer;margin-bottom:32px;box-shadow:0 4px 20px rgba(124,110,230,.3);transition:opacity .2s;font-family:'Syne',sans-serif}
+.run-btn:disabled{background:var(--br);color:var(--mt);box-shadow:none;cursor:not-allowed}
+.err{padding:11px 16px;border-radius:10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--rd);font-size:13px;margin-bottom:14px;display:none}
+.results{display:none}
+.overview{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+.bar-row{margin-bottom:9px}
+.blr{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.bt{height:5px;border-radius:3px;background:var(--br)}
+.bf{height:100%;border-radius:3px;transition:width .8s ease}
+.kwg{display:flex;flex-wrap:wrap;gap:7px}
+.kw{padding:4px 12px;border-radius:100px;font-size:12px;font-weight:500}
+.tl{display:flex;flex-direction:column;gap:9px}
+.ti{display:flex;gap:9px;font-size:13px;color:var(--mt);line-height:1.5}
+.ubar{padding:18px 22px;border-radius:14px;background:rgba(124,110,230,.08);border:1px solid rgba(124,110,230,.25);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px}
+.btn-sm{padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#7c6ee6,#a855f7);color:#fff;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sp{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:up .4s ease}
+@media(max-width:540px){.nl a:not(.on){display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="ni">
+    <a href="index.html" class="logo"><div class="lb">A</div><span class="lt">ATSPro</span></a>
+    <div class="nl">
+      <a href="index.html">Home</a>
+      <a href="checker.html" class="on">ATS Checker</a>
+      <a href="builder.html">CV Builder</a>
+      <a href="pricing.html">Pricing</a>
+      <span class="pb" id="pb">PRO</span>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <h1 style="font-size:clamp(26px,4vw,42px);margin-bottom:8px">ATS Score Checker</h1>
+  <p style="color:var(--mt);margin-bottom:24px">Paste your resume and job description — AI analyses both and gives you an instant score.</p>
+
+  <div class="api-box" id="api-box">
+    <h3>🔑 Enter Your Anthropic API Key</h3>
+    <p>Your key stays in your browser only. Get one free at <a href="https://console.anthropic.com" target="_blank" style="color:var(--ac)">console.anthropic.com</a> → API Keys → Create Key.</p>
+    <div class="api-row">
+      <input type="password" id="api-inp" placeholder="sk-ant-api03-...">
+      <button class="save-btn" onclick="saveKey()">Save Key</button>
+    </div>
+    <div class="saved" id="api-saved">✓ Key saved — ready to analyse!</div>
+  </div>
+
+  <div class="free-bar" id="free-bar">
+    <span id="fb-text">Free plan: 0/2 checks used today</span>
+    <a href="pricing.html" style="padding:6px 14px;border-radius:8px;background:linear-gradient(135deg,#7c6ee6,#a855f7);color:#fff;font-weight:600;font-size:12px">Upgrade to Pro →</a>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:10px;font-family:'Syne',sans-serif">📄 Your Resume</div>
+      <textarea id="res" style="min-height:220px" placeholder="Paste your full resume text here...&#10;&#10;Include your name, experience, skills, education..."></textarea>
+    </div>
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:10px;font-family:'Syne',sans-serif">💼 Job Description</div>
+      <textarea id="jd" style="min-height:220px" placeholder="Paste the full job description here...&#10;&#10;Include requirements, responsibilities, qualifications..."></textarea>
+    </div>
+  </div>
+
+  <div class="err" id="err"></div>
+
+  <button class="run-btn" id="run-btn" onclick="run()">⚡ Analyse ATS Score</button>
+
+  <div class="results fade" id="res-box">
+    <div class="card" style="margin-bottom:16px">
+      <div class="overview">
+        <svg width="130" height="130" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#1e1e35" stroke-width="9"/>
+          <circle id="ring" cx="60" cy="60" r="46" fill="none" stroke="#06d6a0" stroke-width="9"
+            stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round"
+            transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 1s ease,stroke .3s"/>
+          <text id="snum" x="60" y="55" text-anchor="middle" fill="#eeeef5" font-size="20" font-weight="700" font-family="Syne,sans-serif">0</text>
+          <text x="60" y="70" text-anchor="middle" fill="#6b6b85" font-size="9">ATS SCORE</text>
+        </svg>
+        <div style="flex:1;min-width:200px">
+          <div id="verdict" style="font-weight:700;font-size:19px;margin-bottom:6px;font-family:'Syne',sans-serif"></div>
+          <div id="summary" style="color:var(--mt);font-size:14px;margin-bottom:18px;line-height:1.6"></div>
+          <div id="bars"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-bottom:16px">
+      <div class="card" style="border-color:rgba(6,214,160,.25)">
+        <div style="font-weight:700;color:var(--gr);margin-bottom:12px;font-family:'Syne',sans-serif">✓ Matched Keywords</div>
+        <div class="kwg" id="mk"></div>
+      </div>
+      <div class="card" style="border-color:rgba(239,68,68,.25)">
+        <div style="font-weight:700;color:var(--rd);margin-bottom:12px;font-family:'Syne',sans-serif">✗ Missing Keywords</div>
+        <div class="kwg" id="ms"></div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div style="font-weight:700;color:var(--gr);margin-bottom:12px;font-family:'Syne',sans-serif">💪 Strengths</div>
+        <div class="tl" id="str"></div>
+      </div>
+      <div class="card">
+        <div style="font-weight:700;color:var(--ac);margin-bottom:12px;font-family:'Syne',sans-serif">🔧 How to Improve</div>
+        <div class="tl" id="tips"></div>
+      </div>
+    </div>
+
+    <div class="ubar" id="ubar" style="display:none">
+      <div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:4px;font-family:'Syne',sans-serif">🚀 Get Full Analysis with Pro</div>
+        <div style="color:var(--mt);font-size:13px">12 keywords, 5 detailed tips, CV builder — ₹299/month</div>
+      </div>
+      <a href="pricing.html" class="btn-sm">Upgrade →</a>
+    </div>
+  </div>
+</main>
+
+<script>
+let key = localStorage.getItem('akey')||'';
+let pro = localStorage.getItem('plan')==='pro';
+let used = 0;
+const FREE = 2;
+
+(function(){
+  if(pro) document.getElementById('pb').style.display='inline';
+  if(key){document.getElementById('api-box').style.display='none';}
+  const s = localStorage.getItem('chk');
+  if(s){const d=JSON.parse(s);if(d.date===new Date().toDateString())used=d.n;}
+  updateBar();
+})();
+
+function updateBar(){
+  const b=document.getElementById('free-bar');
+  if(pro){b.style.display='none';return;}
+  b.style.display='flex';
+  document.getElementById('fb-text').textContent=`Free plan: ${used}/${FREE} checks used today`;
+}
+
+function saveKey(){
+  const v=document.getElementById('api-inp').value.trim();
+  if(!v.startsWith('sk-ant')){alert('Key must start with sk-ant...');return;}
+  key=v; localStorage.setItem('akey',v);
+  document.getElementById('api-box').style.display='none';
+  document.getElementById('api-saved').style.display='block';
+}
+
+function showErr(m){const e=document.getElementById('err');e.textContent=m;e.style.display='block';}
+function hideErr(){document.getElementById('err').style.display='none';}
+function c(v){return v>=75?'#06d6a0':v>=50?'#f59e0b':'#ef4444';}
+
+async function run(){
+  const res=document.getElementById('res').value.trim();
+  const jd=document.getElementById('jd').value.trim();
+  hideErr();
+  if(!key){showErr('⚠️ Please enter your API key in the banner above.');return;}
+  if(!res||!jd){showErr('⚠️ Please fill in both your resume and the job description.');return;}
+  if(!pro&&used>=FREE){showErr('⚠️ Free limit reached (2/day). Upgrade to Pro for unlimited checks.');return;}
+
+  const btn=document.getElementById('run-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="sp"></span>Analysing with AI...';
+
+  try{
+    const prompt=`You are an ATS expert. Analyse this resume against the job description.
+
+RESUME:
+${res}
+
+JOB DESCRIPTION:
+${jd}
+
+${pro?'Give DETAILED analysis with 12 keywords and 5 tips.':'Give BASIC analysis with 5 keywords and 2 tips.'}
+
+Respond ONLY with valid JSON — no markdown, no backticks, nothing else:
+{"score":75,"keywordMatch":70,"formatScore":80,"experienceMatch":75,"skillsMatch":65,"matched":["keyword1","keyword2"],"missing":["keyword1","keyword2"],"strengths":["strength1","strength2"],"tips":["tip1","tip2"],"summary":"2 sentence assessment."}`;
+
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:pro?2000:1000,messages:[{role:'user',content:prompt}]})
+    });
+    const data=await resp.json();
+    if(!resp.ok)throw new Error(data.error?.message||'API error. Check your key.');
+    const text=data.content[0].text;
+    const json=JSON.parse(text.match(/\{[\s\S]*\}/)[0]);
+    render(json);
+    if(!pro){used++;localStorage.setItem('chk',JSON.stringify({date:new Date().toDateString(),n:used}));updateBar();}
+  }catch(e){showErr('⚠️ '+e.message);}
+  finally{btn.disabled=false;btn.innerHTML='⚡ Analyse ATS Score';}
+}
+
+function render(r){
+  const circ=289,offset=circ-(r.score/100)*circ;
+  document.getElementById('ring').style.strokeDashoffset=offset;
+  document.getElementById('ring').style.stroke=c(r.score);
+  document.getElementById('snum').textContent=r.score;
+  document.getElementById('verdict').textContent=r.score>=75?'🟢 Strong ATS Match':r.score>=50?'🟡 Moderate — Needs Work':'🔴 Low Match';
+  document.getElementById('summary').textContent=r.summary;
+
+  const bdata=[['Keyword Match',r.keywordMatch],['Format Score',r.formatScore],['Experience',r.experienceMatch],['Skills',r.skillsMatch]];
+  document.getElementById('bars').innerHTML=bdata.map(([l,v])=>`<div class="bar-row"><div class="blr"><span style="color:var(--mt)">${l}</span><span style="color:${c(v)};font-weight:600">${v}%</span></div><div class="bt"><div class="bf" style="width:${v}%;background:${c(v)}"></div></div></div>`).join('');
+
+  document.getElementById('mk').innerHTML=(r.matched||[]).map(k=>`<span class="kw" style="background:rgba(6,214,160,.1);border:1px solid rgba(6,214,160,.3);color:var(--gr)">${k}</span>`).join('');
+  document.getElementById('ms').innerHTML=(r.missing||[]).map(k=>`<span class="kw" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--rd)">${k}</span>`).join('');
+  document.getElementById('str').innerHTML=(r.strengths||[]).map(s=>`<div class="ti"><span style="color:var(--gr);flex-shrink:0">→</span>${s}</div>`).join('');
+  document.getElementById('tips').innerHTML=(r.tips||[]).map(s=>`<div class="ti"><span style="color:var(--ac);flex-shrink:0">→</span>${s}</div>`).join('');
+  document.getElementById('ubar').style.display=pro?'none':'flex';
+  document.getElementById('res-box').style.display='block';
+  document.getElementById('res-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
